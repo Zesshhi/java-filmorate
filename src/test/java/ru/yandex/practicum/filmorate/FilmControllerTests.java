@@ -31,44 +31,48 @@ public class FilmControllerTests {
               "description": "Aboba description",
               "releaseDate": "2000-01-01",
               "duration": 100
-            }""";
+              }""";
     @Autowired
     private FilmController filmController;
     @Autowired
     private MockMvc mockMvc;
 
     static Stream<String> invalidFilmJsonData() {
-        return Stream.of("""
-                        {
-                          "name": "",
-                          "description": "Aboba description",
-                          "releaseDate": "2000-01-01",
-                          "duration": 100
-                        }""", // Неверный название фильма
+        return Stream.of(
                 """
-                        {
-                          "name": "Aboba Film",
-                          "description": "Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль.
-                           Здесь они хотят разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов.\s
-                           о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.",
-                          "releaseDate": "2000-01-01",
-                          "duration": 100
-                        }""", // Слишком длинное описание
+                            {
+                                "name": "",
+                                "description": "Aboba description",
+                                "releaseDate": "2000-01-01",
+                                "duration": 100
+                            }
+                        """, // Неверный название фильма
                 """
-                        {
-                          "name": "Aboba Film",
-                          "description": "Aboba description",
-                          "releaseDate": "1890-03-25",
-                          "duration": 100
-                        }""", // Неправильная дата
+                            {
+                                "name": "Aboba Film",
+                                "description": "Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль.
+                               Здесь они хотят разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов.\s
+                               о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.",
+                              "releaseDate": "2000-01-01",
+                              "duration": 100
+                            }
+                        """, // Слишком длинное описание
                 """
-                        {
-                          "name": "Aboba Film",
-                          "description": "Aboba description",
-                          "releaseDate": "2000-01-01",
-                          "duration": -100
-                        }""" // Неправильная продолжительность фильма
-
+                            {
+                                "name": "Aboba Film",
+                                "description": "Aboba description",
+                                "releaseDate": "1890-03-25",
+                                "duration": 100
+                            }
+                        """, // Неправильная дата
+                """
+                            {
+                                "name": "Aboba Film",
+                                "description": "Aboba description",
+                                "releaseDate": "2000-01-01",
+                                "duration": -100
+                            }
+                        """ // Неправильная продолжительность фильма
         );
     }
 
@@ -137,12 +141,12 @@ public class FilmControllerTests {
     @Test
     public void should_get_all_films() throws Exception {
         String filmJsonCreate2 = """
-            {
-              "name": "Aboba Film 2",
-              "description": "Aboba description 2",
-              "releaseDate": "2002-01-01",
-              "duration": 50
-            }""";
+                {
+                  "name": "Aboba Film 2",
+                  "description": "Aboba description 2",
+                  "releaseDate": "2002-01-01",
+                  "duration": 50
+                }""";
 
         mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(filmJsonCreate));
         mockMvc.perform(post("/films").contentType(MediaType.APPLICATION_JSON).content(filmJsonCreate2));
@@ -150,20 +154,22 @@ public class FilmControllerTests {
         MvcResult result = mockMvc.perform(get("/films")).andReturn();
 
         JsonElement expectedJson = JsonParser.parseString("""
-                   [{
-                   "id": 1,
-                   "name": "Aboba Film",
-                   "description": "Aboba description",
-                   "releaseDate": "2000-01-01",
-                   "duration": 100
-                  },
-                 {
-                  "id": 2,
-                  "name": "Aboba Film 2",
-                  "description": "Aboba description 2",
-                  "releaseDate": "2002-01-01",
-                  "duration": 50
-                }]
+                   [
+                       {
+                           "id": 1,
+                           "name": "Aboba Film",
+                           "description": "Aboba description",
+                           "releaseDate": "2000-01-01",
+                           "duration": 100
+                      },
+                     {
+                          "id": 2,
+                          "name": "Aboba Film 2",
+                          "description": "Aboba description 2",
+                          "releaseDate": "2002-01-01",
+                          "duration": 50
+                    }
+                ]
                 """);
 
         assertEquals(expectedJson, JsonParser.parseString(result.getResponse().getContentAsString()));
