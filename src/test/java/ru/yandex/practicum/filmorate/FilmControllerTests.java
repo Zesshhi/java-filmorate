@@ -26,12 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FilmControllerTests {
 
     String filmJsonCreate = """
-              {
-               "name": "Aboba Film",
-               "description": "Aboba description",
-               "releaseDate": "2000-01-01",
-               "duration": 100
-              }""";
+            {"name": "Aboba Film",
+             "description": "Aboba description",
+             "releaseDate": "2000-01-01",
+             "duration": 100
+            }""";
     @Autowired
     private FilmController filmController;
     @Autowired
