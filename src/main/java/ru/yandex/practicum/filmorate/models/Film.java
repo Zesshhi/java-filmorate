@@ -4,7 +4,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-public @Data class Film {
+@Data
+public class Film {
 
     private int id;
     private String name;
