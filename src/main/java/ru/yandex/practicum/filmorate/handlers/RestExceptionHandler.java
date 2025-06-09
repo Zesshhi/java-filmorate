@@ -20,18 +20,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ConditionsNotMetException.class})
     protected ResponseEntity<Object> handleConditionsNotMetException(ConditionsNotMetException ex, WebRequest request) {
         ApiErrorResponse apiError = new ApiErrorResponse("Неправильный json", ex.getMessage());
+        log.error(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({DuplicatedDataException.class})
     protected ResponseEntity<Object> handleDuplicatedDataException(DuplicatedDataException ex, WebRequest request) {
         ApiErrorResponse apiError = new ApiErrorResponse("Неправильный json", ex.getMessage());
+        log.error(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NotFoundException.class})
     protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
         ApiErrorResponse apiError = new ApiErrorResponse("Неправильный json", ex.getMessage());
+        log.error(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 

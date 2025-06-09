@@ -67,7 +67,7 @@ public class FilmControllerTests {
 
     @BeforeEach
     public void beforeEach() {
-        filmController.getFilms().clear();
+        filmController.clearFilms();
     }
 
     @Test

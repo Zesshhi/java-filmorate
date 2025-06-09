@@ -64,7 +64,7 @@ public class UserControllerTests {
 
     @BeforeEach
     public void beforeEach() {
-        userController.getUsers().clear();
+        userController.clearUsers();
     }
 
     @Test
