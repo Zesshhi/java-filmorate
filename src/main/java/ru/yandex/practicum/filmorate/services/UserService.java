@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.services;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
@@ -12,18 +12,18 @@ import ru.yandex.practicum.filmorate.models.User;
 import ru.yandex.practicum.filmorate.storages.InMemoryUserStorage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private InMemoryUserStorage inMemoryUserStorage;
+    private final InMemoryUserStorage inMemoryUserStorage;
 
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return inMemoryUserStorage.getUsers();
     }
 
@@ -78,7 +78,7 @@ public class UserService {
     public void deleteFriendsConnect(Integer user, Integer friend) {
         validateFriends(user, friend);
 
-        Set<Integer> userFriends = inMemoryUserStorage.getUsersFriendsData().getOrDefault(user, new HashSet<>());
+        Set<Integer> userFriends = inMemoryUserStorage.getUserFriendsIds(user);
 
         inMemoryUserStorage.deleteFriendFromUser(userFriends, user, friend);
     }

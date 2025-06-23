@@ -76,6 +76,10 @@ public class InMemoryFilmStorage implements FilmStorage {
         return popularFilms;
     }
 
+    public Set<Integer> getFilmLikes(Integer filmId) {
+        return filmsUsersLikes.getOrDefault(filmId, new HashSet<>());
+    }
+
     private void addFilmToUsersMapIfNotExist(Integer filmId) {
         if (!filmsUsersLikes.containsKey(filmId)) {
             filmsUsersLikes.put(filmId, new HashSet<>());

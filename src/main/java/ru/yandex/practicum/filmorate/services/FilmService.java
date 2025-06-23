@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.services;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.models.Film;
@@ -14,14 +14,14 @@ import static java.util.stream.Collectors.toMap;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FilmService {
-    @Autowired
-    private InMemoryFilmStorage inMemoryFilmStorage;
-    @Autowired
-    private InMemoryUserStorage inMemoryUserStorage;
+
+    private final InMemoryFilmStorage inMemoryFilmStorage;
+    private final InMemoryUserStorage inMemoryUserStorage;
 
 
-    public ArrayList<Film> getFilms() {
+    public List<Film> getFilms() {
         return inMemoryFilmStorage.getFilms();
     }
 
@@ -52,13 +52,13 @@ public class FilmService {
     public void deleteLikeFromFilm(Integer filmId, Integer userId) {
         validateFilmsLikes(filmId, userId);
 
-        Set<Integer> filmsLikes = inMemoryFilmStorage.getFilmUsersLikes().getOrDefault(filmId, new HashSet<>());
+        Set<Integer> filmsLikes = inMemoryFilmStorage.getFilmLikes(filmId);
 
         inMemoryFilmStorage.deleteFilmLikeFromUser(filmsLikes, filmId, userId);
     }
 
 
-    public ArrayList<Film> getPopularFilms(Integer count) {
+    public List<Film> getPopularFilms(Integer count) {
         Map<Integer, Set<Integer>> filmsIds = inMemoryFilmStorage.getFilmUsersLikes()
                 .entrySet()
                 .stream()

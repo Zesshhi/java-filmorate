@@ -43,11 +43,7 @@ public class InMemoryUserStorage implements UserStorage {
             usersFriends.put(user, new HashSet<>());
         }
 
-        return new HashSet<>(usersFriends.get(user));
-    }
-
-    public Map<Integer, Set<Integer>> getUsersFriendsData() {
-        return usersFriends;
+        return usersFriends.get(user);
     }
 
     public ArrayList<User> getUserFriends(Set<Integer> userFriendsIds) {
