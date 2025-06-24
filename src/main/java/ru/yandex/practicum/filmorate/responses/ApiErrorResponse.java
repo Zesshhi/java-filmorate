@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.response;
+package ru.yandex.practicum.filmorate.responses;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
