@@ -1,11 +1,11 @@
-package ru.yandex.practicum.filmorate.storages;
+package ru.yandex.practicum.filmorate.storages.users;
 
 import ru.yandex.practicum.filmorate.models.User;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface UserStorage {
-    public ArrayList<User> getUsers();
+    public List<User> getUsers();
 
     public void clearUsers();
 

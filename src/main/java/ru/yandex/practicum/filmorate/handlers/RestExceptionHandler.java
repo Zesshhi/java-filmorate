@@ -9,6 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.DuplicatedDataException;
+import ru.yandex.practicum.filmorate.exceptions.InternalServerException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.responses.ApiErrorResponse;
 
@@ -19,7 +20,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ConditionsNotMetException.class})
     protected ResponseEntity<Object> handleConditionsNotMetException(ConditionsNotMetException ex, WebRequest request) {
-        ApiErrorResponse apiError = new ApiErrorResponse("Неправильный json", ex.getMessage());
+        ApiErrorResponse apiError = new ApiErrorResponse("Неправильные данные", ex.getMessage());
         log.error(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
@@ -44,5 +45,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler({InternalServerException.class})
+    protected ResponseEntity<Object> handleInternalServerException(InternalServerException ex, WebRequest request) {
+        ApiErrorResponse apiError = new ApiErrorResponse("Ошибка сервера", ex.getMessage());
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }
