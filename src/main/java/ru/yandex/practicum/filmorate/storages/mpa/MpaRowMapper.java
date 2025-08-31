@@ -1,11 +1,13 @@
 package ru.yandex.practicum.filmorate.storages.mpa;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.models.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class MpaRowMapper implements RowMapper<Mpa> {
 
     @Override

@@ -6,26 +6,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.models.Mpa;
-import ru.yandex.practicum.filmorate.services.DbMpaService;
+import ru.yandex.practicum.filmorate.models.Genre;
+import ru.yandex.practicum.filmorate.services.GenreService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("mpa")
+@RequestMapping("genres")
 @Slf4j
 @RequiredArgsConstructor
-public class DbMpaController {
-    private final DbMpaService dbMpaService;
+public class GenreController {
+    private final GenreService dbGenreService;
 
     @GetMapping
-    public List<Mpa> getMpas() {
-        return dbMpaService.getMpas();
+    public List<Genre> getGenres() {
+        return dbGenreService.getGenres();
     }
 
     @GetMapping("/{id}")
-    public Mpa getMpa(@PathVariable int id) {
-        return dbMpaService.getMpa(id);
+    public Genre getGenre(@PathVariable int id) {
+        return dbGenreService.getGenre(id);
     }
 }
-

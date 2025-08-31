@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storages.genres.GenreRowMapper;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -20,8 +21,8 @@ import java.util.Set;
 public class DbFilmStorage extends BaseRepository<Film> implements FilmStorage {
 
 
-    public DbFilmStorage(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    public DbFilmStorage(JdbcTemplate jdbcTemplate, FilmRowMapper rowMapper) {
+        super(jdbcTemplate, rowMapper);
     }
 
     @Override
@@ -37,10 +38,10 @@ public class DbFilmStorage extends BaseRepository<Film> implements FilmStorage {
                          LEFT join mpa m ON fm.mpa_id = m.id
                 GROUP BY f.id
                 """;
-        return jdbcTemplate.query(stmt, new FilmRowMapper());
+        return this.getAll(stmt);
     }
 
-    public Film getFilm(int id) {
+    public Optional<Film> getFilm(int id) {
         String stmt = """
                 SELECT f.*,
                        CASE WHEN ARRAY_AGG(DISTINCT m.id)[1] IS NULL THEN NULL ELSE  ARRAY_AGG(DISTINCT (m.id || ':' || m.name))[1] END  as mpa,
@@ -53,7 +54,7 @@ public class DbFilmStorage extends BaseRepository<Film> implements FilmStorage {
                 GROUP BY f.id
                 HAVING f.id = ?
                 """;
-        return jdbcTemplate.queryForObject(stmt, new FilmRowMapper(), id);
+        return this.getOne(stmt, id);
     }
 
     @Override
@@ -180,26 +181,33 @@ public class DbFilmStorage extends BaseRepository<Film> implements FilmStorage {
 
     public List<Film> getPopularFilms(Integer count) {
         String stmt = """
-                SELECT *
-                from (
-                        SELECT f.*,
-                               CASE WHEN ARRAY_AGG(DISTINCT m.id)[1] IS NULL THEN NULL ELSE  ARRAY_AGG(DISTINCT (m.id || ':' || m.name))[1] END  as mpa,
-                               CASE WHEN ARRAY_AGG(DISTINCT fg.genre_id)[1] IS NULL THEN NULL ELSE ARRAY_AGG(DISTINCT (fg.genre_id || ':' || g.name)) END AS genres
-                        FROM films f
-                                 LEFT JOIN film_genres fg ON f.id = fg.film_id
-                                 LEFT join genres g ON g.id = fg.genre_id
-                                 LEFT JOIN film_mpa fm ON f.id = fm.film_id
-                                 LEFT join mpa m ON fm.mpa_id = m.id
-                        GROUP BY f.id
-                        ) f
-                         join (select count(user_id) as amount_of_likes, film_id
-                               from FILM_LIKES
-                               group by film_id) fl on f.id = fl.film_id
-                order by fl.amount_of_likes DESC
+                SELECT
+                    f.*,
+                    CASE
+                        WHEN ARRAY_AGG(DISTINCT m.id)[1] IS NULL THEN NULL
+                        ELSE ARRAY_AGG(DISTINCT (m.id || ':' || m.name))[1]
+                    END AS mpa,
+                    CASE
+                        WHEN ARRAY_AGG(DISTINCT fg.genre_id)[1] IS NULL THEN NULL
+                        ELSE ARRAY_AGG(DISTINCT (fg.genre_id || ':' || g.name))
+                    END AS genres,
+                    fl.amount_of_likes
+                FROM films f
+                LEFT JOIN film_genres fg ON f.id = fg.film_id
+                LEFT JOIN genres g ON g.id = fg.genre_id
+                LEFT JOIN film_mpa fm ON f.id = fm.film_id
+                LEFT JOIN mpa m ON fm.mpa_id = m.id
+                LEFT JOIN (
+                    SELECT film_id, COUNT(user_id) AS amount_of_likes
+                    FROM film_likes
+                    GROUP BY film_id
+                ) fl ON f.id = fl.film_id
+                GROUP BY f.id, fl.amount_of_likes
+                ORDER BY fl.amount_of_likes DESC
                 LIMIT ?
                 """;
 
-        return jdbcTemplate.query(stmt, new FilmRowMapper(), count);
+        return jdbcTemplate.query(stmt, rowMapper, count);
     }
 
 
@@ -220,10 +228,9 @@ public class DbFilmStorage extends BaseRepository<Film> implements FilmStorage {
 
     public List<Genre> getFilmGenres(Integer filmId) {
         String stmt = """
-                SELECT *
-                from genres g
-                         join (select genre_id
-                               from film_genres) fg on g.id = fg.genre_id
+                SELECT g.*
+                FROM genres g
+                JOIN film_genres fg ON g.id = fg.genre_id;
                 """;
 
         return jdbcTemplate.query(stmt, new GenreRowMapper());

@@ -8,8 +8,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.services.DbGenreService;
+import ru.yandex.practicum.filmorate.services.GenreService;
 import ru.yandex.practicum.filmorate.storages.genres.DbGenreStorage;
+import ru.yandex.practicum.filmorate.storages.genres.GenreRowMapper;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,15 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Import({
-        DbGenreService.class,
-        DbGenreStorage.class
+        GenreService.class,
+        DbGenreStorage.class,
+        GenreRowMapper.class
 })
 @Sql(scripts = "/setup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class GenreControllerTests {
 
     @Autowired
-    private DbGenreService dbGenreService;
+    private GenreService dbGenreService;
 
 
     @Test

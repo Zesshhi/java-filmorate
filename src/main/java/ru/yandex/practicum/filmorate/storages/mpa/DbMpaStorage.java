@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.models.Mpa;
 import ru.yandex.practicum.filmorate.storages.BaseRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -16,8 +17,8 @@ import java.util.List;
 public class DbMpaStorage extends BaseRepository<Mpa> implements MpaStorage {
 
 
-    public DbMpaStorage(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    public DbMpaStorage(JdbcTemplate jdbcTemplate, MpaRowMapper rowMapper) {
+        super(jdbcTemplate, rowMapper);
     }
 
     @Override
@@ -26,16 +27,16 @@ public class DbMpaStorage extends BaseRepository<Mpa> implements MpaStorage {
                 SELECT *
                 FROM mpa
                 """;
-        return jdbcTemplate.query(stmt, new MpaRowMapper());
+        return this.getAll(stmt);
     }
 
-    public Mpa getMpa(int id) {
+    public Optional<Mpa> getMpa(int id) {
         String stmt = """
                 SELECT *
                 FROM mpa
                 WHERE id = ?
                 """;
-        return jdbcTemplate.queryForObject(stmt, new MpaRowMapper(), id);
+        return this.getOne(stmt, id);
     }
 
     @Override

@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.services.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/memory/users")
+@RequestMapping("users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {

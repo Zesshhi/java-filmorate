@@ -10,15 +10,15 @@ import ru.yandex.practicum.filmorate.storages.BaseRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @Repository
 public class DbUserStorage extends BaseRepository<User> implements UserStorage {
 
-
-    public DbUserStorage(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    public DbUserStorage(JdbcTemplate jdbcTemplate, UserRowMapper rowMapper) {
+        super(jdbcTemplate, rowMapper);
     }
 
     @Override
@@ -27,16 +27,16 @@ public class DbUserStorage extends BaseRepository<User> implements UserStorage {
                 SELECT *
                 FROM users
                 """;
-        return jdbcTemplate.query(stmt, new UserRowMapper());
+        return this.getAll(stmt);
     }
 
-    public User getUser(int id) {
+    public Optional<User> getUser(int id) {
         String stmt = """
                 SELECT *
                 FROM users
                 WHERE id = ?
                 """;
-        return jdbcTemplate.queryForObject(stmt, new UserRowMapper(), id);
+        return this.getOne(stmt, id);
     }
 
     @Override
@@ -95,7 +95,6 @@ public class DbUserStorage extends BaseRepository<User> implements UserStorage {
         String stmt = """
                 DELETE FROM friends WHERE user_id = ? and friend_id = ?
                 """;
-
         jdbcTemplate.update(stmt, userId, friendId);
     }
 
@@ -106,20 +105,19 @@ public class DbUserStorage extends BaseRepository<User> implements UserStorage {
                 JOIN users u ON f.friend_id = u.id
                 WHERE f.user_id = ?
                 """;
-        return jdbcTemplate.query(stmt, new UserRowMapper(), userId);
+        return jdbcTemplate.query(stmt, rowMapper, userId);
     }
 
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
         String stmt = """
-                    SELECT *
+                    SELECT u.*
                     FROM users u
-                    JOIN (SELECT user_friends.friend_id
-                    from friends user_friends
-                    JOIN friends friend_friends ON user_friends.friend_id = friend_friends.friend_id
-                    WHERE user_friends.user_id = ? and friend_friends.user_id = ?
-                    ) f ON f.friend_id = u.id
+                    JOIN friends uf ON u.id = uf.friend_id
+                    JOIN friends ff ON uf.friend_id = ff.friend_id
+                    WHERE uf.user_id = ?
+                      AND ff.user_id = ?;
                 """;
-        return jdbcTemplate.query(stmt, new UserRowMapper(), userId, friendId);
+        return jdbcTemplate.query(stmt, rowMapper, userId, friendId);
     }
 
 }

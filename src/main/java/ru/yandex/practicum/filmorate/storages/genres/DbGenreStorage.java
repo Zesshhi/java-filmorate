@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.models.Genre;
 import ru.yandex.practicum.filmorate.storages.BaseRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -16,8 +17,8 @@ import java.util.List;
 public class DbGenreStorage extends BaseRepository<Genre> implements GenreStorage {
 
 
-    public DbGenreStorage(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    public DbGenreStorage(JdbcTemplate jdbcTemplate, GenreRowMapper rowMapper) {
+        super(jdbcTemplate, rowMapper);
     }
 
     @Override
@@ -26,16 +27,16 @@ public class DbGenreStorage extends BaseRepository<Genre> implements GenreStorag
                 SELECT *
                 FROM genres
                 """;
-        return jdbcTemplate.query(stmt, new GenreRowMapper());
+        return this.getAll(stmt);
     }
 
-    public Genre getGenre(int id) {
+    public Optional<Genre> getGenre(int id) {
         String stmt = """
                 SELECT *
                 FROM genres
                 WHERE id = ?
                 """;
-        return jdbcTemplate.queryForObject(stmt, new GenreRowMapper(), id);
+        return this.getOne(stmt, id);
     }
 
     @Override
