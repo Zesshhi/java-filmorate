@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.models.Genre;
 import ru.yandex.practicum.filmorate.models.Mpa;
+import ru.yandex.practicum.filmorate.storages.BaseRepository;
 import ru.yandex.practicum.filmorate.storages.films.DbFilmStorage;
+import ru.yandex.practicum.filmorate.storages.films.FilmStorage;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FilmService {
 
-    private final DbFilmStorage dbFilmStorage;
+    private final FilmStorage dbFilmStorage;
     private final UserService userService;
     private final GenreService dbGenreService;
     private final MpaService mpaService;

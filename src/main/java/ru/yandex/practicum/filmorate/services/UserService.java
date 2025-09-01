@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.models.User;
-import ru.yandex.practicum.filmorate.storages.users.DbUserStorage;
+import ru.yandex.practicum.filmorate.storages.users.UserStorage;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final DbUserStorage dbUserStorage;
+    private final UserStorage dbUserStorage;
 
 
     public List<User> getUsers() {

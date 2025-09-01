@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.models.Genre;
 import ru.yandex.practicum.filmorate.storages.genres.DbGenreStorage;
+import ru.yandex.practicum.filmorate.storages.genres.GenreStorage;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class GenreService {
-    private final DbGenreStorage dbGenreStorage;
+    private final GenreStorage dbGenreStorage;
 
     public List<Genre> getGenres() {
         return dbGenreStorage.getGenres();
