@@ -7,8 +7,6 @@ import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.models.Genre;
 import ru.yandex.practicum.filmorate.models.Mpa;
-import ru.yandex.practicum.filmorate.storages.BaseRepository;
-import ru.yandex.practicum.filmorate.storages.films.DbFilmStorage;
 import ru.yandex.practicum.filmorate.storages.films.FilmStorage;
 
 import java.util.Collections;

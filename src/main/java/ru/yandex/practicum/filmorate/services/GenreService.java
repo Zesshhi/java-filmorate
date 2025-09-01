@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.models.Genre;
-import ru.yandex.practicum.filmorate.storages.genres.DbGenreStorage;
 import ru.yandex.practicum.filmorate.storages.genres.GenreStorage;
 
 import java.util.List;
