@@ -22,6 +22,11 @@ public class FilmController {
         return filmService.getFilms();
     }
 
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable int id) {
+        return filmService.getFilm(id);
+    }
+
     public void clearFilms() {
         filmService.clearFilms();
     }
@@ -50,6 +55,5 @@ public class FilmController {
     public List<Film> getPopularFilms(@RequestParam(required = false, defaultValue = "10") Integer count) {
         return filmService.getPopularFilms(count);
     }
-
 
 }
